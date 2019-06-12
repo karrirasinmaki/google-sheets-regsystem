@@ -10,11 +10,11 @@ function parseTemplateTags(content, tags) {
     .replace("{{CONTENT}}", tags.CONTENT);
 }
 
-function sentlog(type, token) {
+function sentlog(type, token, details='') {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(
     SHEET_SENT
   );
-  sheet.appendRow([new Date(), type, token]);
+  sheet.appendRow([new Date(), type, token, details]);
 }
 
 /**
@@ -24,6 +24,7 @@ function sentlog(type, token) {
  *   row: number,
  *   col_trigger: string,
  *   col_message: string,
+ *   clearTrigger: boolean,
  *   callback: fn,
  * }
  */
@@ -31,11 +32,11 @@ function timedTriggerRows(seconds, rows) {
   for (var i = seconds, step = 2; i > 0; i -= step) {
     rows.forEach(function(row) {
       row.sheet
-        .getRange(row.col_trigger + row.row)
+        .getRange(row.col_message + row.row)
         .setValue(`Sending in ${i} seconds...`);
     });
     SpreadsheetApp.flush();
-    Utilities.sleep(step * seconds * 1000);
+    Utilities.sleep(step * 1000);
   }
   rows.forEach(function(row) {
     const triggerCell = row.sheet.getRange(row.col_trigger + row.row);
@@ -48,9 +49,12 @@ function timedTriggerRows(seconds, rows) {
         message = row.callback();
       }
     } catch (e) {
-      message = e.message;
+      console.error(e);
+      message = e.message || e;
     }
     notifyCell.setValue(message);
-    triggerCell.setValue("");
+    if (row.clearTrigger) {
+      triggerCell.setValue("");
+    }
   });
 }

@@ -1,3 +1,5 @@
+import Reg from './models/Reg';
+
 function findRegById(id) {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_REGS);
   const rows = sheet.getRange("AD1:AD").getValues();
@@ -18,56 +20,14 @@ function findRegById(id) {
  * row - (number) row
  */
 function getReg(idOrSheet, rowOrNone) {
-  var data;
-  var sheet;
-  var row;
   // Using sheet and row
   if (idOrSheet && rowOrNone) {
-    sheet = idOrSheet;
-    row = rowOrNone;
-    data = sheet.getRange(`A${row}:AD${row}`).getValues()[0];
-    console.log(row);
-    console.log(data);
+    return new Reg(idOrSheet, rowOrNone);
   }
   // Using id
   else {
     return findRegById(idOrSheet);
   }
-  if (!data) return null;
-  const headers = sheet.getRange("A1:AD1").getValues()[0];
-  const get = function(key) {
-    let out = null;
-    headers.forEach(function(h, index) {
-      if (h === key) {
-        out = data[index];
-        return true;
-      }
-    });
-  };
-  const reload = function() {
-    return getReg(sheet, row);
-  };
-  return {
-    _sheet: sheet,
-    _row: row,
-    _headers: headers,
-    _reload: reload,
-    _data: data,
-    get,
-    action: data[0],
-    token: data[29],
-    firstName: data[3],
-    lastName: data[4],
-    email: data[5],
-    tel: data[6],
-    pass: data[9],
-    pass_partner: data[18],
-    pass_role: data[15],
-    extrapass: data[10],
-    extrapass_partner: data[11] || data[12],
-    extrapass_role: data[13],
-    score: data[26]
-  };
 }
 
 /**
@@ -84,8 +44,11 @@ function getEmail(params) {
   ).evaluate();
   const tags = {
     TITLE: params.subject,
-    // IMAGE_URL: course.img,
-    CONTENT: tobrs(params.content)
+    IMAGE_URL: EMAIL_IMAGE_URL,
+    CONTENT: tobrs(params.content),
+    FB_PAGE: FB_PAGE,
+    IG_PAGE: IG_PAGE,
+    WWW_PAGE: WWW_PAGE,
   };
   const content = parseTemplateTags(
     parseTemplateTags(html.getContent(), tags),
@@ -97,4 +60,16 @@ function getEmail(params) {
     html: content,
     plain
   };
+}
+
+function getConfirmationEmail(confirmation) {
+  return getEmail({
+    subject: "Helswingi 2019 - Registration confirmed",
+    content: `
+
+Payment link:
+https://blackpepperswing1.typeform.com/to/wwByrS?regid=${confirmation.token}&email=${confirmation.email}&order=${confirmation.price}
+
+  `
+  });
 }

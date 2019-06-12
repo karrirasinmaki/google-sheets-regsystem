@@ -1,4 +1,4 @@
-function sendInBlue(to, subject, content, options) {
+export function sendInBlue(to, subject, content, options) {
   const data = {
     sender: {
       name: options.name,
@@ -25,8 +25,8 @@ function sendInBlue(to, subject, content, options) {
       };
     });
   }
-  Logger.log(data);
-  UrlFetchApp.fetch("https://api.sendinblue.com/v3/smtp/email", {
+  console.log(data);
+  const reponse = UrlFetchApp.fetch("https://api.sendinblue.com/v3/smtp/email", {
     method: "post",
     contentType: "application/json",
     headers: {
@@ -35,4 +35,9 @@ function sendInBlue(to, subject, content, options) {
     // Convert the JavaScript object to a JSON string.
     payload: JSON.stringify(data)
   });
+  const reponseCode = response.getResponseCode()
+  if (reponseCode >= 400) {
+    throw reponse.getContentText()
+  }
+  return true
 }
