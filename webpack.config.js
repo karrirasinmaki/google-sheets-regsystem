@@ -88,6 +88,10 @@ module.exports = {
       {
         from: `${src}/appsscript.json`,
         to: destination
+      },
+      {
+        from: `./.secrets.js`,
+        to: destination
       }
     ]),
     new GasPlugin({
