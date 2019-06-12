@@ -1,0 +1,52 @@
+{
+  "name": "helswingi-regs",
+  "version": "0.1.0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "jslint": "jslint src/*.js",
+    "babel": "babel --presets es2015 src/inject/inject.js -o dist/inject.bundle.js",
+    "start": "http-server",
+    "webpack": "npm run bundle; webpack",
+    "bundle": "cat src/*.js > tmp/bundle.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/intraktio/fiksari-center-appscripts.git"
+  },
+  "author": "Karri Rasinmäki",
+  "license": "ISC",
+  "homepage": "",
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
+    "@babel/plugin-transform-member-expression-literals": "^7.2.0",
+    "@babel/plugin-transform-object-assign": "^7.2.0",
+    "@babel/plugin-transform-property-literals": "^7.2.0",
+    "@babel/preset-env": "^7.4.5",
+    "@dreipol/babel-preset-google-apps-script": "^1.0.2",
+    "@google/clasp": "^2.1.0",
+    "@types/google-apps-script": "^0.0.50",
+    "babel-eslint": "^10.0.1",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-add-module-exports": "^1.0.2",
+    "babel-plugin-array-includes": "^2.0.3",
+    "clean-webpack-plugin": "^2.0.2",
+    "copy-webpack-plugin": "^5.0.3",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-config-prettier": "^4.3.0",
+    "eslint-loader": "^2.1.2",
+    "eslint-plugin-googleappsscript": "^1.0.1",
+    "eslint-plugin-import": "^2.17.2",
+    "eslint-plugin-prettier": "^3.1.0",
+    "gas-lib": "^2.0.3",
+    "gas-webpack-plugin": "^1.0.2",
+    "prettier": "^1.17.1",
+    "uglifyjs-webpack-plugin": "^2.1.3",
+    "webpack": "^4.32.0",
+    "webpack-cli": "^3.3.2",
+    "webpack-merge-and-include-globally": "^2.1.16"
+  }
+}
