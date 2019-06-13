@@ -9,6 +9,7 @@ export default class Confirmation extends DataRow {
     let data = this._data
     this.token = data[0]
     this.status = data[1]
-    this.sent = data[2]
+    this.message = data[2]
+    this.timestamp = data[3]
   }
 }

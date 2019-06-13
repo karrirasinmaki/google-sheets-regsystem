@@ -11,6 +11,25 @@ function regDetails(reg) {
   return out.map(e => e.join(':\n')).join('\n\n')
 }
 
+function regSummary(reg) {
+  const listfn = (...items) => items.filter(item => (''+item).length > 0).join(', ')
+  let summ = []
+  // Pass
+  let pass_partner = reg.pass_partner ? 'partner ' + reg.pass_partner : ''
+  summ.push(`- ${reg.pass} (${listfn(reg.pass_track, reg.pass_role, pass_partner)})`)
+  // Extra pass
+  if (reg.has_extrapass) {
+    let extrapass_partner = reg.extrapass_partner ? 'partner ' + reg.extrapass_partner : ''
+    summ.push(`- Extra track, ${reg.extrapass} (${listfn(reg.extrapass_role, extrapass_partner)})`)
+  }
+  // T-Shirt
+  if (reg.has_tshirt) {
+    summ.push(`- T-Shirt, ${reg.tshirt} (${reg.thsirt_size})`)
+  }
+  summ.push(`- Total: ${reg.score}€`)
+  return summ.join('\n')
+}
+
 function paymentReceipt(reg) {
   const payment = null
   return `

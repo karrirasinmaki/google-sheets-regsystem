@@ -25,7 +25,7 @@ export function sendInBlue(to, subject, content, options) {
       };
     });
   }
-  console.log(data);
+  console.log('Email sent: ' + data.subject, data.to);
   const response = UrlFetchApp.fetch("https://api.sendinblue.com/v3/smtp/email", {
     method: "post",
     contentType: "application/json",

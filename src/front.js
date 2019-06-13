@@ -2,20 +2,24 @@ function doGet(e) {
   if (e.parameter.page === "registration") {
     return doGetRegistration(e);
   }
-  return renderPage("loo" + JSON.stringify(e));
+  return renderPage(`
+<a href="http://www.helswingi.fi" target="_blank">www.helswingi.fi</a>
+  `);
 }
 
 function doGetRegistration(e) {
-  const requireEmail = false
   const reg = getReg(e.parameter.regid);
-  if (requireEmail && e.parameter.email.toLowerCase() !== reg.email.toLowerCase()) {
-    return renderPage('No registration found. Please give correct reg id and email.');
-  }
   if (!reg) {
-    return renderPage('No registration found. Please check you used the correct link.');
+    return renderPage('No registration found. Please check the link is correct.');
   }
+  const confirmation = findConfirmationById(reg.token)||{}
+  const due_date = confirmation.timestamp ? (
+    new Date(new Date(confirmation.timestamp).setDate(confirmation.timestamp.getDate()+14))
+  ) : null
   return renderPage(include('front', {
     reg: reg,
+    confirmation: confirmation,
+    due_date: due_date,
     receipt: paymentReceipt(reg),
     reg_details: tobrs(regDetails(reg)),
     payment_link: getPaymentLink(reg),

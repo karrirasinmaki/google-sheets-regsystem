@@ -1,4 +1,4 @@
-export const DEBUG = true;
+export const DEBUG = false;
 export const SHEET_CONFIRMATIONS = "Confirmations";
 export const SHEET_COURSES = "Courses";
 export const SHEET_SENT = "SentLog";

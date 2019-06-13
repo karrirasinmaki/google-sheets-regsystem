@@ -17,20 +17,27 @@
 <div class="section section-centered">
     <div>Registration: <?= data.reg.status ?></div>
     <div>
-	<? if (data.reg.paid) { ?>
-	    We have received your payment, thank you!
-	<? } else { ?>
-	    Your payment is on due.
+	<? if (data.reg.status == 'Confirmed') { ?>
+	    <? if (data.reg.paid) { ?>
+		We have received your payment, thank you!
+	    <? } else { ?>
+		Your payment is on due.
+		<? if (data.due_date) { ?>
+		    <br />Due date <?= data.due_date.toDateString() ?>.
+		<? } ?>
+	    <? } ?>
 	<? } ?>
     </div>
 </div>
 
 <nav class="section section-centered">
     <a href="#reg-details">Registration details</a> |
-    <? if (data.reg.paid) { ?>
-	<a href="#receipt">Receipt</a> |
-    <? } else { ?>
-	<a href="<?= data.payment_link ?>" target="_blank">Pay now (€<?= data.reg.score ?>)</a> |
+    <? if (data.reg.status == 'Confirmed') { ?>
+	<? if (data.reg.paid) { ?>
+	    <a href="#receipt">Receipt</a> |
+	<? } else { ?>
+	    <a href="<?= data.payment_link ?>" target="_blank">Pay now (€<?= data.reg.score ?>)</a> |
+	<? } ?>
     <? } ?>
     <a href="#contact">Contact</a>
 </nav>
@@ -59,8 +66,8 @@
 
 <div id="contact" class="collapsed">
     <h3>Contact</h3>
+    <a href="#">Close</a>
     <div class="section">
-	<a href="#">Close</a>
 	<a href="mailto:info@helswingi.fi">info@helswingi.fi</a><br>
 	<a href="http://www.helswingi.fi" target="_blank">helswingi.fi</a><br>
 	<a href="http://facebook.com/helswingi" target="_blank">facebook.com/helswingi</a><br>

@@ -16,6 +16,7 @@ export default class Reg extends DataRow {
     this.email = this.get('Email')
     this.tel = this.get('Phone number')
     this.pass = this.get('Pass type')
+    this.pass_track = this.get('Full pass track')
     this.pass_partner = this.get('Partner')
     this.pass_role = this.get('Role')
     this.extrapass = this.get('Extra track?')
@@ -23,6 +24,7 @@ export default class Reg extends DataRow {
     this.extrapass_role = this.get('Slow Bal - Role')
     this.has_extrapass = (''+this.extrapass).toLowerCase() !== 'no thanks'
     this.tshirt = this.get('I want to get a T-shirt')
+    this.thsirt_size = this.get('T-shirt type and size')
     this.has_tshirt = (''+this.tshirt).toLowerCase() !== 'no'
     this.score = this.get('Score')
   }

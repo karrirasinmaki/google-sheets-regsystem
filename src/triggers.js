@@ -15,6 +15,9 @@ function triggerChangeConfirmationStatus(e) {
   const sendlist = [];
   for (let i = 0, l = range.getNumRows(); i < l; ++i) {
     const confirmation = new Confirmation(sheet, row + i)
+    if (!!confirmation.timestamp) {
+      continue;
+    }
     if (confirmation.status === "Confirmed") {
       sendlist.push(confirmation);
     }
@@ -47,7 +50,8 @@ function triggerSendConfirmationEmail(confirmation) {
     const reg = getReg(confirmation.token)
     sendEmail(reg.email, getConfirmationEmail(reg))
     sentlog(confirmation.status, confirmation.token)
-    return "Sent: " + (new Date().toJSON())
+    confirmation.storeCol('Timestamp', new Date())
+    return 'Sent: ' + (new Date().toJSON())
   } catch (exp) {
     sentlog('error', confirmation.token, JSON.stringify(exp))
     throw exp

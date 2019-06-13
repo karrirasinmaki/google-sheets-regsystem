@@ -1,4 +1,5 @@
 import Reg from './models/Reg';
+// import Confirmation from './models/Confirmation';
 
 function findRegById(id) {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_REGS);
@@ -7,6 +8,18 @@ function findRegById(id) {
     const row = rows[i];
     if (row[0] === id) {
       return getReg(sheet, i + 1);
+    }
+  }
+  return null
+}
+
+function findConfirmationById(id) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_CONFIRMATIONS);
+  const rows = sheet.getRange("A1:A").getValues();
+  for (var i = 0, l = rows.length; i < l; ++i) {
+    const row = rows[i];
+    if (row[0] === id) {
+      return new Confirmation(sheet, i + 1);
     }
   }
   return null
@@ -71,14 +84,17 @@ function getConfirmationEmail(reg) {
   return getEmail({
     subject: "Helswingi 2019 - Registration confirmed",
     content: `
-Hello!
+Hello, ${reg.firstName} ${reg.lastName}!
 
 We are happy to inform you, that your registration for Helswingi 2019 is confirmed. Please make your payment within 14 days from today.
+
+Order summary:
+${regSummary(reg)}
 
 Payment link:
 ${getPaymentLink(reg)}
 
-Registration details:
+Your registration details:
 https://www.helswingi.fi/registration-details?regid=${reg.token}
 
 We regularly update our website, Facebook event page and Instagram with the latest news about the festival. If you have any questions, please contact us via e-mail at info@helswingi.fi.
@@ -93,7 +109,7 @@ https://www.instagram.com/helswingi/
 Ps. You can also make your payment using a wire transfer. Transfer details:
 
 Amount: ${reg.score}€
-Beneficiary name: Osuuskunta Swing Kollektiivi
+Beneficiary name: Coop Swing Collective
 Address: Mäkelänrinne 5 A 81, 00550 Helsinki, Finland
 IBAN: FI82 7997 7996 5259 81
 BIC: HOLVFIHH

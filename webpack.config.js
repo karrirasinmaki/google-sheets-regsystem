@@ -90,6 +90,12 @@ module.exports = {
         to: destination
       },
       {
+        from: `${src}/tests/*.js`,
+        test: /test(s|)-*\.js$/,
+        flatten: true,
+        to: destination
+      },
+      {
         from: `./.secrets.js`,
         to: destination
       }
