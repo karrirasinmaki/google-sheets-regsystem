@@ -1,4 +1,5 @@
 import Reg from './models/Reg';
+import Payment from './models/Payment';
 // import Confirmation from './models/Confirmation';
 
 function findRegById(id) {
@@ -20,6 +21,18 @@ function findConfirmationById(id) {
     const row = rows[i];
     if (row[0] === id) {
       return new Confirmation(sheet, i + 1);
+    }
+  }
+  return null
+}
+
+function findPaymentByRegId(id) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_PAYMENTS);
+  const rows = sheet.getRange("A1:A").getValues();
+  for (var i = 0, l = rows.length; i < l; ++i) {
+    const row = rows[i];
+    if (row[0] === id) {
+      return new Payment(sheet, i + 1);
     }
   }
   return null

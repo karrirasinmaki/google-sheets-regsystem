@@ -1,8 +1,8 @@
 export const DEBUG = false;
 export const SHEET_CONFIRMATIONS = "Confirmations";
-export const SHEET_COURSES = "Courses";
 export const SHEET_SENT = "SentLog";
 export const SHEET_REGS = "Regs";
+export const SHEET_PAYMENTS = "AllPaid";
 
 export const FB_PAGE = "https://www.facebook.com/helswingi/";
 export const IG_PAGE = "https://www.instagram.com/helswingi/";

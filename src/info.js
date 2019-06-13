@@ -31,14 +31,16 @@ function regSummary(reg) {
 }
 
 function paymentReceipt(reg) {
-  const payment = null
+  const payment = findPaymentByRegId(reg.token)
   return `
-This is a receipt of your payment.
+This is a receipt for your payment.
 
 ____________
 |
-${!payment ? '' : `Payment date: 2018-08-09 15:14:07`}
-${!payment ? '' : `Payment card: **** **** **** 9999 (Karri Rasinmäki)`}
+${!payment ? '' :
+`${payment.message}
+
+Payment date: ${new Date(payment.date).toJSON()}`}
 Order id: ${reg.token}
 Order details:
 - ${reg.pass}
