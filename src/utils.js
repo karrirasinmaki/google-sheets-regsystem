@@ -3,11 +3,11 @@ function tobrs(text) {
 }
 
 function parseTemplateTags(content, tags) {
-  return content
-    .replace("{{TITLE}}", tags.TITLE)
-    .replace("{{IMAGE_URL}}", tags.IMAGE_URL)
-    .replace("{{ROLE}}", tags.ROLE)
-    .replace("{{CONTENT}}", tags.CONTENT);
+  let cont = '' + content
+  Object.keys(tags).forEach(key => {
+    cont = cont.replace("{{"+key+"}}", tags[key])
+  })
+  return cont
 }
 
 function sentlog(type, token, details='') {
@@ -57,4 +57,17 @@ function timedTriggerRows(seconds, rows) {
       triggerCell.setValue("");
     }
   });
+}
+
+function getPaymentLink(reg) {
+  const getNum = (str) => {
+    let val = +(str.replace(/.*(?:\+|\s)(\d+)€/, '$1')||0)
+    return isNaN(val) ? 0 : val
+  }
+  let regid = encodeURIComponent(reg.token)
+  let email = encodeURIComponent(reg.email)
+  let p = getNum(reg.pass)
+  let e = getNum(reg.extrapass) + getNum(reg.tshirt)
+  if (reg.score !== p+e) return 'Invalid payment url'
+  return `https://blackpepperswing1.typeform.com/to/wwByrS?regid=${regid}&email=${email}&order=${reg.score}&p=${p}&e=${e}`
 }

@@ -2,13 +2,14 @@ import Reg from './models/Reg';
 
 function findRegById(id) {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_REGS);
-  const rows = sheet.getRange("AD1:AD").getValues();
+  const rows = sheet.getRange("AC1:AC").getValues();
   for (var i = 0, l = rows.length; i < l; ++i) {
     const row = rows[i];
     if (row[0] === id) {
       return getReg(sheet, i + 1);
     }
   }
+  return null
 }
 
 /**
@@ -36,16 +37,20 @@ function getReg(idOrSheet, rowOrNone) {
  * params: {
  *   subject - (string) email subject
  *   content - (string) email content
+ *   head - (optional|string) extra code to head block
+ *   contentbrs - (optional|boolean) default=true, convert line breaks to br tags
  * }
  */
 function getEmail(params) {
+  const { contentbrs=true } = params
   const html = HtmlService.createTemplateFromFile(
     "email-confirmation"
   ).evaluate();
   const tags = {
+    HEAD: params.head||'',
     TITLE: params.subject,
     IMAGE_URL: EMAIL_IMAGE_URL,
-    CONTENT: tobrs(params.content),
+    CONTENT: contentbrs ? tobrs(params.content) : params.content,
     FB_PAGE: FB_PAGE,
     IG_PAGE: IG_PAGE,
     WWW_PAGE: WWW_PAGE,
@@ -62,14 +67,37 @@ function getEmail(params) {
   };
 }
 
-function getConfirmationEmail(confirmation) {
+function getConfirmationEmail(reg) {
   return getEmail({
     subject: "Helswingi 2019 - Registration confirmed",
     content: `
+Hello!
+
+We are happy to inform you, that your registration for Helswingi 2019 is confirmed. Please make your payment within 14 days from today.
 
 Payment link:
-https://blackpepperswing1.typeform.com/to/wwByrS?regid=${confirmation.token}&email=${confirmation.email}&order=${confirmation.price}
+${getPaymentLink(reg)}
 
+Registration details:
+https://www.helswingi.fi/registration-details?regid=${reg.token}
+
+We regularly update our website, Facebook event page and Instagram with the latest news about the festival. If you have any questions, please contact us via e-mail at info@helswingi.fi.
+
+Welcome to Helswingi!
+
+https://www.helswingi.fi/
+https://www.facebook.com/events/357214858208526/
+https://www.instagram.com/helswingi/
+
+
+Ps. You can also make your payment using a wire transfer. Transfer details:
+
+Amount: ${reg.score}€
+Beneficiary name: Osuuskunta Swing Kollektiivi
+Address: Mäkelänrinne 5 A 81, 00550 Helsinki, Finland
+IBAN: FI82 7997 7996 5259 81
+BIC: HOLVFIHH
+Message: Helswingi 2019 - ${reg.token}
   `
   });
 }

@@ -6,13 +6,12 @@ function triggerChangeConfirmationStatus(e) {
     return;
   }
   const { range } = e;
-  console.log("triggerChangeConfirmationStatus - " + range.getSheet().getName());
   if (range.getSheet().getName() !== SHEET_CONFIRMATIONS) {
     return;
   }
+
   const row = range.getRow();
   const sheet = range.getSheet();
-
   const sendlist = [];
   for (let i = 0, l = range.getNumRows(); i < l; ++i) {
     const confirmation = new Confirmation(sheet, row + i)

@@ -10,10 +10,8 @@ export default class DataRow {
     this._data = this._sheet.getRange(this._row, 1, 1, this._lastColumn).getValues()[0];
   }
   get(key) {
-    headers.forEach(function(h, index) {
-      if (h === key) {
-        return this._data[index]
-      }
-    })
+    let index = this._headers.indexOf(key)
+    if (index === -1) return null
+    return this._data[index]
   }
 }

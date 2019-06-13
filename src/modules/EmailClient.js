@@ -26,7 +26,7 @@ export function sendInBlue(to, subject, content, options) {
     });
   }
   console.log(data);
-  const reponse = UrlFetchApp.fetch("https://api.sendinblue.com/v3/smtp/email", {
+  const response = UrlFetchApp.fetch("https://api.sendinblue.com/v3/smtp/email", {
     method: "post",
     contentType: "application/json",
     headers: {
@@ -37,7 +37,7 @@ export function sendInBlue(to, subject, content, options) {
   });
   const reponseCode = response.getResponseCode()
   if (reponseCode >= 400) {
-    throw reponse.getContentText()
+    throw response.getContentText()
   }
   return true
 }

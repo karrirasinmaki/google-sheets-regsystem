@@ -1,0 +1,87 @@
+<script>
+// google.script.run.withSuccessHandler(showData).getData();
+</script>
+
+<a class="back-hover" href="http://www.helswingi.fi" target="_blank">← www.helswingi.fi</a>
+
+<div class="section section-centered">
+    <h1 class="layered">
+	<div class="sub">Your Registration</div>
+	<div>Helswingi 2019</div>
+    </h1>
+    <div><?= data.reg.firstName ?> <?= data.reg.lastName ?></div>
+    <div><?= data.reg.email ?></div>
+    <div><?= data.reg.token ?></div>
+</div>
+
+<div class="section section-centered">
+    <div>Registration: <?= data.reg.status ?></div>
+    <div>
+	<? if (data.reg.paid) { ?>
+	    We have received your payment, thank you!
+	<? } else { ?>
+	    Your payment is on due.
+	<? } ?>
+    </div>
+</div>
+
+<nav class="section section-centered">
+    <a href="#reg-details">Registration details</a> |
+    <? if (data.reg.paid) { ?>
+	<a href="#receipt">Receipt</a> |
+    <? } else { ?>
+	<a href="<?= data.payment_link ?>" target="_blank">Pay now (€<?= data.reg.score ?>)</a> |
+    <? } ?>
+    <a href="#contact">Contact</a>
+</nav>
+
+<hr />
+<br />
+
+<div id="reg-details" class="collapsed">
+    <h3>Registration details</h3>
+    <a href="#">Close</a>
+    <div class="section section-alt">
+	<i>If you want to change details in your registration, please contact info@helswingi.fi.</i>
+    </div>
+    <div class="section">
+	<?!= data.reg_details ?>
+    </div>
+</div>
+
+<div id="receipt" class="collapsed">
+    <h3>Receipt</h3>
+    <a href="#">Close</a>
+    <div class="section">
+	<pre><?= data.receipt ?></pre>
+    </div>
+</div>
+
+<div id="contact" class="collapsed">
+    <h3>Contact</h3>
+    <div class="section">
+	<a href="#">Close</a>
+	<a href="mailto:info@helswingi.fi">info@helswingi.fi</a><br>
+	<a href="http://www.helswingi.fi" target="_blank">helswingi.fi</a><br>
+	<a href="http://facebook.com/helswingi" target="_blank">facebook.com/helswingi</a><br>
+	<a href="https://www.instagram.com/helswingi/" target="_blank">instagram.com/helswingi</a><br>
+	<br>
+	<a href="tel:+358841541724">+358 84 154 1724</a>
+	<br>
+	<br>
+	<p>
+	    <b>Privacy policy</b><br>
+	    <a href="https://www.helswingi.fi/privacy-policy">www.helswingi.fi/privacy-policy</a>
+	</p>
+	<p>
+	    <b>Terms and conditions</b><br>
+	    <a href="https://www.helswingi.fi/terms-and-conditions">www.helswingi.fi/terms-and-conditions</a>
+	</p>
+	</p>
+	    <b>Legal information</b><br>
+	    Legal name: Osuuskunta Swing Kollektiivi / Coop Swing Collective<br>
+	    VAT number: FI28578381<br>
+	    Address: Mäkelänrinne 5 A 81, 00550 Helsinki, Finland
+	</p>
+    </section>
+</div>
