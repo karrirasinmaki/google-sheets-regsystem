@@ -15,7 +15,7 @@ function triggerChangeConfirmationStatus(e) {
   const sendlist = [];
   for (let i = 0, l = range.getNumRows(); i < l; ++i) {
     const confirmation = new Confirmation(sheet, row + i)
-    if (!!confirmation.timestamp) {
+    if (!!confirmation.timestamp || !!confirmation.message) {
       continue;
     }
     if (confirmation.status === "Confirmed") {
