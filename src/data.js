@@ -1,6 +1,19 @@
 import Reg from './models/Reg';
+import SentLog from './models/SentLog';
 import Payment from './models/Payment';
 // import Confirmation from './models/Confirmation';
+
+function findSentLogByTokenAndType(token, type) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_SENT);
+  const rows = sheet.getRange("B1:C").getValues();
+  for (var i = 0, l = rows.length; i < l; ++i) {
+    const row = rows[i];
+    if (row[0] === type && row[1] === token) {
+      return new SentLog(sheet, i + 1);
+    }
+  }
+  return null
+}
 
 function findRegById(id) {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_REGS);
@@ -127,6 +140,17 @@ Address: Mäkelänrinne 5 A 81, 00550 Helsinki, Finland
 IBAN: FI82 7997 7996 5259 81
 BIC: HOLVFIHH
 Message: Helswingi 2019 - ${reg.token}
+  `
+  });
+}
+
+function getReceiptEmail(reg, receipt) {
+  return getEmail({
+    subject: "Helswingi 2019 - Payment receipt",
+    content: `
+Hello, ${reg.firstName} ${reg.lastName}!
+
+${receipt}
   `
   });
 }

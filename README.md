@@ -22,6 +22,14 @@ Example ``.clasp.json``:
 ```
 Read more: [https://github.com/google/clasp](https://github.com/google/clasp)
 
+## Build & Deploy
+
+```
+npm run webpack
+clasp push
+```
+
+
 ## Triggers
 
 triggerSendConfirmation

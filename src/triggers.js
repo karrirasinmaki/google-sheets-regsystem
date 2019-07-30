@@ -38,8 +38,29 @@ function triggerChangeConfirmationStatus(e) {
     }))
   );
 }
-
 global.triggerChangeConfirmationStatus = triggerChangeConfirmationStatus
+
+function triggerNewPayment(e) {
+  if (!e || !e.range) {
+    return;
+  }
+  const { range } = e;
+  if (range.getSheet().getName() !== SHEET_PAYMENTS+"Test") {
+    return;
+  }
+
+  const row = range.getRow();
+  const sheet = range.getSheet();
+  const sendlist = [];
+  for (let i = 0, l = range.getNumRows(); i < l; ++i) {
+    const payment = new Payment(sheet, row + i)
+    if (!!findSentLogByTokenAndType(payment.reg_id, 'Receipt')) {
+      continue;
+    }
+    triggerSendReceiptEmail(payment)
+  }
+}
+global.triggerNewPayment = triggerNewPayment
 
 function triggerSendConfirmationEmail(confirmation) {
   // if (!isNaN(confirmation.confirmationdate)) {
@@ -54,6 +75,22 @@ function triggerSendConfirmationEmail(confirmation) {
     return 'Sent: ' + (new Date().toJSON())
   } catch (exp) {
     sentlog('error', confirmation.token, JSON.stringify(exp))
+    throw exp
+  }
+}
+
+function triggerSendReceiptEmail(payment) {
+  // if (!isNaN(confirmation.confirmationdate)) {
+  //   // Todo: Check if email already sent
+  //   throw "Sending cancelled: email already sent.";
+  // }
+  try {
+    const reg = findRegById(payment.reg_id)
+    sendEmail(reg.email, getReceiptEmail(reg, paymentReceipt(reg, payment)))
+    sentlog('Receipt', payment.reg_id, new Date())
+    return 'Sent: ' + (new Date().toJSON())
+  } catch (exp) {
+    sentlog('error', payment.reg_id, JSON.stringify(exp))
     throw exp
   }
 }

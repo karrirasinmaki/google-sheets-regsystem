@@ -30,8 +30,9 @@ function regSummary(reg) {
   return summ.join('\n')
 }
 
-function paymentReceipt(reg) {
-  const payment = findPaymentByRegId(reg.token)
+function paymentReceipt(reg, payment) {
+  if (!payment) payment = findPaymentByRegId(reg.token)
+  if (!reg) reg = findRegById(payment.reg_id)
   return `
 This is a receipt for your payment.
 
