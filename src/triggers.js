@@ -45,7 +45,7 @@ function triggerNewPayment(e) {
     return;
   }
   const { range } = e;
-  if (range.getSheet().getName() !== SHEET_PAYMENTS+"Test") {
+  if (range.getSheet().getName() !== SHEET_PAYMENTS) {
     return;
   }
 
