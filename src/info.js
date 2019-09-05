@@ -4,7 +4,7 @@ function regDetails(reg) {
     let data = reg._data[index]
     if (data === true) data = 'Yes'
     if (data === false) data = 'No'
-    if (data.length > 0) {
+    if (!!data || data.length > 0) {
       out.push([header, data])
     }
   })
