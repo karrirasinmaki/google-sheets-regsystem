@@ -2,6 +2,7 @@ function regDetails(reg) {
   let out = [];
   reg._headers.forEach((header, index) => {
     let data = reg._data[index]
+    if (header[0] === '_') return
     if (data === true) data = 'Yes'
     if (data === false) data = 'No'
     if (!!data || data.length > 0) {
@@ -61,7 +62,7 @@ ________
 Merchant:
 Coop Swing Collective / Osuuskunta Swing Kollektiivi
 FI28578381 (VAT number)
-Mäkelänrinne 5 A 81, 00550 Helsinki, Finland
+Meritullinkatu 7 A 11, 00170 Helsinki, Finland
 info@blackpepperswing.com
 |____________
   `

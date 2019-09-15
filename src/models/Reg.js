@@ -27,5 +27,6 @@ export default class Reg extends DataRow {
     this.thsirt_size = this.get('T-shirt type and size')
     this.has_tshirt = (''+this.tshirt).toLowerCase() !== 'no'
     this.score = this.get('Score')
+    this.group = this.get('Group')
   }
 }
