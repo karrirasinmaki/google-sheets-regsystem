@@ -15,11 +15,12 @@ export function sendEmail(to, email) {
     throw "Not allowed sending emails to other addresses (DEBUG mode ON).";
   }
   if (!email) throw "Can't process email";
-  sendInBlue(to, email.subject, email.plain, {
+  let response = sendInBlue(to, email.subject, email.plain, {
     name: "Helswingi",
     from: "info@helswingi.fi",
     htmlBody: email.html
     // attachments: attachments
   });
+  sentlog('email', response.getResponseCode(), JSON.stingify(response.getContentText()))
 }
 

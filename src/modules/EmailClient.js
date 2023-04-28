@@ -39,5 +39,5 @@ export function sendInBlue(to, subject, content, options) {
   if (reponseCode >= 400) {
     throw response.getContentText()
   }
-  return true
+  return response
 }

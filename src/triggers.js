@@ -69,7 +69,8 @@ function triggerSendConfirmationEmail(confirmation) {
   // }
   try {
     const reg = getReg(confirmation.token)
-    sendEmail(reg.email, getConfirmationEmail(reg))
+    let email = getConfirmationEmail(reg)
+    sendEmail(reg.email, email)
     sentlog(confirmation.status, confirmation.token)
     confirmation.storeCol('Timestamp', new Date())
     return 'Sent: ' + (new Date().toJSON())
@@ -87,7 +88,7 @@ function triggerSendReceiptEmail(payment) {
   try {
     const reg = findRegById(payment.reg_id)
     sendEmail(reg.email, getReceiptEmail(reg, paymentReceipt(reg, payment)))
-    sentlog('Receipt', payment.reg_id, new Date())
+    sentlog('Receipt', payment.reg_id)
     return 'Sent: ' + (new Date().toJSON())
   } catch (exp) {
     sentlog('error', payment.reg_id, JSON.stringify(exp))

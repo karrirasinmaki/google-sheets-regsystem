@@ -17,7 +17,7 @@ function findSentLogByTokenAndType(token, type) {
 
 function findRegById(id) {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_REGS);
-  const rows = sheet.getRange("AC1:AC").getValues();
+  const rows = sheet.getRange("A1:A").getValues();
   for (var i = 0, l = rows.length; i < l; ++i) {
     const row = rows[i];
     if (row[0] === id) {
