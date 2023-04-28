@@ -1,5 +1,6 @@
 import Confirmation from './models/Confirmation';
 import { sendEmail } from './modules/PostOffice';
+import { sentlog } from './modules/Log'
 
 function triggerChangeConfirmationStatus(e) {
   if (!e || !e.range) {

@@ -3,6 +3,7 @@
  * */
 
 import { sendInBlue } from './EmailClient'
+import { sentlog } from './Log'
 import { DEBUG } from '../globals'
 
 /**
@@ -21,6 +22,7 @@ export function sendEmail(to, email) {
     htmlBody: email.html
     // attachments: attachments
   });
-  sentlog('email', response.getResponseCode(), JSON.stingify(response.getContentText()))
+  let responseJson = JSON.parse(response.getContentText())
+  sentlog('email', responseJson.messageId, email.plain)
 }
 

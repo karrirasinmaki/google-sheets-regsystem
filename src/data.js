@@ -81,7 +81,7 @@ function getReg(idOrSheet, rowOrNone) {
  * }
  */
 function getEmail(params) {
-  const { contentbrs=true } = params
+  const { contentbrs=true, content='' } = params
   const html = HtmlService.createTemplateFromFile(
     "email-confirmation"
   ).evaluate();
@@ -89,20 +89,23 @@ function getEmail(params) {
     HEAD: params.head||'',
     TITLE: params.subject,
     IMAGE_URL: EMAIL_IMAGE_URL,
-    CONTENT: contentbrs ? tobrs(params.content) : params.content,
+    CONTENT: contentbrs ? tobrs(content) : content,
     FB_PAGE: FB_PAGE,
     IG_PAGE: IG_PAGE,
     WWW_PAGE: WWW_PAGE,
   };
-  const content = parseTemplateTags(
+  const htmlContent = parseTemplateTags(
     parseTemplateTags(html.getContent(), tags),
     tags
   );
-  const plain = content.replace(/<[^>]+>/g, "");
+  const plain = parseTemplateTags(
+    parseTemplateTags( content.replace(/<[^>]+>/g, ""), tags),
+    tags
+  );
   return {
     subject: params.subject,
-    html: content,
-    plain
+    html: htmlContent,
+    plain: plain
   };
 }
 
