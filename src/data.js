@@ -108,11 +108,11 @@ function getEmail(params) {
 
 function getConfirmationEmail(reg) {
   return getEmail({
-    subject: "Helswingi 2019 - Registration confirmed",
+    subject: EVENT_NAME + " - Registration confirmed",
     content: `
 Hello, ${reg.firstName} ${reg.lastName}!
 
-We are happy to inform you, that your registration for Helswingi 2019 is confirmed. Please make your payment within 14 days from today.
+We are happy to inform you, that your registration for ${EVENT_NAME} is confirmed. Please make your payment within 14 days from today.
 
 Order summary:
 ${regSummary(reg)}
@@ -121,32 +121,31 @@ Payment link:
 ${getPaymentLink(reg)}
 
 Your registration details:
-https://www.helswingi.fi/registration-details?regid=${reg.token}
+https://www.helswingi.fi/registration/details?regid=${reg.token}
 
-We regularly update our website, Facebook event page and Instagram with the latest news about the festival. If you have any questions, please contact us via e-mail at info@helswingi.fi.
+We regularly update our website, Facebook event page and Instagram with the latest news about the festival. If you have any questions, please contact us via e-mail at ${EVENT_EMAIL}.
 
 Welcome to Helswingi!
 
-https://www.helswingi.fi/
-https://www.facebook.com/events/357214858208526/
-https://www.instagram.com/helswingi/
-
+${EVENT_WWW}
+${EVENT_FACEBOOK}
+${EVENT_INSTAGRAM}
 
 Ps. You can also make your payment using a wire transfer. Transfer details:
 
 Amount: ${reg.score}€
-Beneficiary name: Coop Swing Collective
-Address: Mäkelänrinne 5 A 81, 00550 Helsinki, Finland
-IBAN: FI82 7997 7996 5259 81
-BIC: HOLVFIHH
-Message: Helswingi 2019 - ${reg.token}
+Beneficiary name: ${ORG_NAME_LEGAL}
+Address: ${ORG_ADDRESS}
+IBAN: ${ORG_IBAN}
+BIC: ${ORG_BIC}
+Message: ${EVENT_NAME} - ${reg.token}
   `
   });
 }
 
 function getReceiptEmail(reg, receipt) {
   return getEmail({
-    subject: "Helswingi 2019 - Payment receipt",
+    subject: EVENT_NAME + " - Payment receipt",
     content: `
 Hello, ${reg.firstName} ${reg.lastName}!
 

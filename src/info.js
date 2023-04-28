@@ -60,10 +60,10 @@ ${!reg.has_tshirt ? '' :
 ________
 
 Merchant:
-Coop Swing Collective / Osuuskunta Swing Kollektiivi
-FI28578381 (VAT number)
-Meritullinkatu 7 A 11, 00170 Helsinki, Finland
-info@blackpepperswing.com
+${ORG_NAME_LEGAL}
+${ORG_VATNUM} (VAT number)
+${ORG_ADDRESS}
+${ORG_EMAIL}
 |____________
   `
 }
