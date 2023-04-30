@@ -3,4 +3,4 @@ dist
 tmp
 
 .secrets.js
-.clasp.json
+.clasprc.json

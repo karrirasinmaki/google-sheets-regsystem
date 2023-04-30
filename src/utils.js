@@ -1,8 +1,8 @@
-function tobrs(text) {
+export function tobrs(text) {
   return text.split("\n").join("<br/>");
 }
 
-function parseTemplateTags(content, tags) {
+export function parseTemplateTags(content, tags) {
   let cont = '' + content
   Object.keys(tags).forEach(key => {
     cont = cont.replace("{{"+key+"}}", tags[key])
@@ -21,7 +21,7 @@ function parseTemplateTags(content, tags) {
  *   callback: fn,
  * }
  */
-function timedTriggerRows(seconds, rows) {
+export function timedTriggerRows(seconds, rows) {
   for (var i = seconds, step = 2; i > 0; i -= step) {
     rows.forEach(function(row) {
       row.sheet
@@ -52,7 +52,7 @@ function timedTriggerRows(seconds, rows) {
   });
 }
 
-function getPaymentLink(reg) {
+export function getPaymentLink(reg) {
   const getNum = (str) => {
     let val = +(str.replace(/.*(?:\+|\s)(\d+)€/, '$1')||0)
     return isNaN(val) ? 0 : val

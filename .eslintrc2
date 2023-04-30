@@ -10,19 +10,19 @@
   },
   "extends": [
     "eslint:recommended",
-    "airbnb-base"
+    "airbnb-base",
+    "plugin:prettier/recommended"
   ],
   "plugins": [
-    "googleappsscript"
+    "googleappsscript",
+    "prettier"
   ],
   "env": {
     "googleappsscript/googleappsscript": true
   },
   "rules": {
-    "no-undef": "error",
-    "prettier/prettier": "warn",
-    "import/prefer-default-export": "warn",
-    "semi": 0
+    "prettier/prettier": "error",
+    "import/prefer-default-export": "error"
   },
   "globals": {
     "CardService": true,

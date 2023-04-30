@@ -1,4 +1,6 @@
-function regDetails(reg) {
+import { findPaymentByRegId, findRegById } from './data';
+
+export function regDetails(reg) {
   let out = [];
   reg._headers.forEach((header, index) => {
     let data = reg._data[index]
@@ -12,7 +14,7 @@ function regDetails(reg) {
   return out.map(e => e.join(':\n')).join('\n\n')
 }
 
-function regSummary(reg) {
+export function regSummary(reg) {
   const listfn = (...items) => items.filter(item => (''+item).length > 0).join(', ')
   let summ = []
   // Pass
@@ -31,7 +33,7 @@ function regSummary(reg) {
   return summ.join('\n')
 }
 
-function paymentReceipt(reg, payment) {
+export function paymentReceipt(reg, payment) {
   if (!payment) payment = findPaymentByRegId(reg.token)
   if (!reg) reg = findRegById(payment.reg_id)
   return `

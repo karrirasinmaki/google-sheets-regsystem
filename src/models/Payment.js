@@ -4,6 +4,7 @@ export default class Confirmation extends DataRow {
   constructor(sheet, row) {
     super(sheet, row)
   }
+
   _reload() {
     super._reload()
     this.reg_id = this.get('Token')

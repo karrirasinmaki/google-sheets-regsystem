@@ -1,5 +1,9 @@
+import { tobrs, getPaymentLink } from './utils';
+import { regSummary, regDetails, paymentReceipt } from './info';
+import { findConfirmationById, getEmail, getReg } from './data';
+
 function doGet(e) {
-  if (e.parameter.page === "registration") {
+  if (e.parameter.page === 'registration') {
     return doGetRegistration(e);
   }
   return renderPage(`
@@ -12,14 +16,14 @@ function doGetRegistration(e) {
   if (!reg) {
     return renderPage('No registration found. Please check the link is correct.');
   }
-  const confirmation = findConfirmationById(reg.token)||{}
+  const confirmation = findConfirmationById(reg.token) || {}
   const due_date = confirmation.timestamp ? (
-    new Date(new Date(confirmation.timestamp).setDate(confirmation.timestamp.getDate()+14))
+    new Date(new Date(confirmation.timestamp).setDate(confirmation.timestamp.getDate() + 14))
   ) : null
   return renderPage(include('front', {
-    reg: reg,
-    confirmation: confirmation,
-    due_date: due_date,
+    reg,
+    confirmation,
+    due_date,
     receipt: paymentReceipt(reg),
     reg_details: tobrs(regDetails(reg)),
     payment_link: getPaymentLink(reg),
@@ -28,20 +32,20 @@ function doGetRegistration(e) {
 
 function renderPage(content) {
   return HtmlService
-  //.createTemplateFromFile('front-template')
-  //.createHtmlOutput(content)
-  //.evaluate()
+  // .createTemplateFromFile('front-template')
+  // .createHtmlOutput(content)
+  // .evaluate()
     .createHtmlOutput(getEmail({
       head: include('front-css'),
       subject: 'Registration details',
-      content: content,
+      content,
       contentbrs: false,
     }).html)
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
 }
 
 function include(filename, data) {
-  let template = HtmlService.createTemplateFromFile(filename)
+  const template = HtmlService.createTemplateFromFile(filename)
   template.data = data
   return template.evaluate().getContent()
 }

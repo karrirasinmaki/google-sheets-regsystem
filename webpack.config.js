@@ -23,12 +23,12 @@ const destination = path.resolve(__dirname, 'dist');
 module.exports = {
   mode,
   context: __dirname,
-  // entry: `${src}/main.js`,
-  entry: `${tmp}/bundle.js`,
+  entry: `${src}/main.js`,
+  // entry: `${tmp}/bundle.js`,
   output: {
     filename: `code-${version}.js`,
     path: destination,
-    libraryTarget: 'this'
+    libraryTarget: 'this',
   },
   resolve: {
     extensions: ['.js']
@@ -72,7 +72,12 @@ module.exports = {
         exclude: /node_modules/,
         loader: 'babel-loader',
         options: {
-          "presets": ["@dreipol/babel-preset-google-apps-script"]
+          "sourceType": "module",
+          "presets": [
+            [
+              "@dreipol/babel-preset-google-apps-script"
+            ]
+          ],
         }
       }
     ]
@@ -92,6 +97,12 @@ module.exports = {
       {
         from: `${src}/tests/*.js`,
         test: /test(s|)-*\.js$/,
+        flatten: true,
+        to: destination
+      },
+      {
+        from: `${src}/globals/*.js`,
+        test: /global(s|)-*\.js$/,
         flatten: true,
         to: destination
       },

@@ -1,12 +1,15 @@
-import Reg from './models/Reg';
 import SentLog from './models/SentLog';
 import Payment from './models/Payment';
-// import Confirmation from './models/Confirmation';
+import Reg from './models/Reg';
+import Confirmation from './models/Confirmation';
 
-function findSentLogByTokenAndType(token, type) {
+import { tobrs, parseTemplateTags, getPaymentLink } from './utils';
+import { regSummary } from './info';
+
+export function findSentLogByTokenAndType(token, type) {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_SENT);
-  const rows = sheet.getRange("B1:C").getValues();
-  for (var i = 0, l = rows.length; i < l; ++i) {
+  const rows = sheet.getRange('B1:C').getValues();
+  for (let i = 0, l = rows.length; i < l; ++i) {
     const row = rows[i];
     if (row[0] === type && row[1] === token) {
       return new SentLog(sheet, i + 1);
@@ -15,10 +18,10 @@ function findSentLogByTokenAndType(token, type) {
   return null
 }
 
-function findRegById(id) {
+export function findRegById(id) {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_REGS);
-  const rows = sheet.getRange("A1:A").getValues();
-  for (var i = 0, l = rows.length; i < l; ++i) {
+  const rows = sheet.getRange('A1:A').getValues();
+  for (let i = 0, l = rows.length; i < l; ++i) {
     const row = rows[i];
     if (row[0] === id) {
       return getReg(sheet, i + 1);
@@ -27,10 +30,10 @@ function findRegById(id) {
   return null
 }
 
-function findConfirmationById(id) {
+export function findConfirmationById(id) {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_CONFIRMATIONS);
-  const rows = sheet.getRange("A1:A").getValues();
-  for (var i = 0, l = rows.length; i < l; ++i) {
+  const rows = sheet.getRange('A1:A').getValues();
+  for (let i = 0, l = rows.length; i < l; ++i) {
     const row = rows[i];
     if (row[0] === id) {
       return new Confirmation(sheet, i + 1);
@@ -39,16 +42,24 @@ function findConfirmationById(id) {
   return null
 }
 
-function findPaymentByRegId(id) {
+export function findPaymentByRegId(id) {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_PAYMENTS);
-  const rows = sheet.getRange("A1:A").getValues();
-  for (var i = 0, l = rows.length; i < l; ++i) {
+  const rows = sheet.getRange('A1:A').getValues();
+  for (let i = 0, l = rows.length; i < l; ++i) {
     const row = rows[i];
     if (row[0] === id) {
       return new Payment(sheet, i + 1);
     }
   }
   return null
+}
+
+export function createConfirmation(reg, status = 'Pending') {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_CONFIRMATIONS);
+  return Confirmation.append(sheet, {
+    token: reg.token,
+    status,
+  })
 }
 
 /**
@@ -59,15 +70,14 @@ function findPaymentByRegId(id) {
  * sheet - (SpreadSheet) spreadsheet instance
  * row - (number) row
  */
-function getReg(idOrSheet, rowOrNone) {
+export function getReg(idOrSheet, rowOrNone) {
   // Using sheet and row
   if (idOrSheet && rowOrNone) {
     return new Reg(idOrSheet, rowOrNone);
   }
   // Using id
-  else {
-    return findRegById(idOrSheet);
-  }
+
+  return findRegById(idOrSheet);
 }
 
 /**
@@ -80,38 +90,38 @@ function getReg(idOrSheet, rowOrNone) {
  *   contentbrs - (optional|boolean) default=true, convert line breaks to br tags
  * }
  */
-function getEmail(params) {
-  const { contentbrs=true, content='' } = params
+export function getEmail(params) {
+  const { contentbrs = true, content = '' } = params
   const html = HtmlService.createTemplateFromFile(
-    "email-confirmation"
+    'email-confirmation',
   ).evaluate();
   const tags = {
-    HEAD: params.head||'',
+    HEAD: params.head || '',
     TITLE: params.subject,
     IMAGE_URL: EMAIL_IMAGE_URL,
     CONTENT: contentbrs ? tobrs(content) : content,
-    FB_PAGE: FB_PAGE,
-    IG_PAGE: IG_PAGE,
-    WWW_PAGE: WWW_PAGE,
+    FB_PAGE,
+    IG_PAGE,
+    WWW_PAGE,
   };
   const htmlContent = parseTemplateTags(
     parseTemplateTags(html.getContent(), tags),
-    tags
+    tags,
   );
   const plain = parseTemplateTags(
-    parseTemplateTags( content.replace(/<[^>]+>/g, ""), tags),
-    tags
+    parseTemplateTags(content.replace(/<[^>]+>/g, ''), tags),
+    tags,
   );
   return {
     subject: params.subject,
     html: htmlContent,
-    plain: plain
+    plain,
   };
 }
 
-function getConfirmationEmail(reg) {
+export function getConfirmationEmail(reg) {
   return getEmail({
-    subject: EVENT_NAME + " - Registration confirmed",
+    subject: `${EVENT_NAME} - Registration confirmed`,
     content: `
 Hello, ${reg.firstName} ${reg.lastName}!
 
@@ -142,17 +152,41 @@ Address: ${ORG_ADDRESS}
 IBAN: ${ORG_IBAN}
 BIC: ${ORG_BIC}
 Message: ${EVENT_NAME} - ${reg.token}
-  `
+  `,
   });
 }
 
-function getReceiptEmail(reg, receipt) {
+export function getReceivedEmail(reg) {
   return getEmail({
-    subject: EVENT_NAME + " - Payment receipt",
+    subject: `${EVENT_NAME} - Registration received`,
+    content: `
+Hello, ${reg.firstName} ${reg.lastName}!
+
+We have received your registration.
+
+Here's a summary of your registration:
+
+${regSummary(reg)}
+
+Your registration details:
+https://www.helswingi.fi/registration/details?regid=${reg.token}
+
+We regularly update our website, Facebook event page and Instagram with the latest news about the festival. If you have any questions, please contact us via e-mail at ${EVENT_EMAIL}.
+
+${EVENT_WWW}
+${EVENT_FACEBOOK}
+${EVENT_INSTAGRAM}
+  `,
+  });
+}
+
+export function getReceiptEmail(reg, receipt) {
+  return getEmail({
+    subject: `${EVENT_NAME} - Payment receipt`,
     content: `
 Hello, ${reg.firstName} ${reg.lastName}!
 
 ${receipt}
-  `
+  `,
   });
 }
