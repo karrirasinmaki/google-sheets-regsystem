@@ -69,3 +69,12 @@ ${ORG_EMAIL}
 |____________
   `
 }
+
+export function legalInfo(reg, payment) {
+  return `
+${ORG_NAME_LEGAL}
+${ORG_VATNUM} (VAT number)
+${ORG_ADDRESS}
+${ORG_EMAIL}
+  `
+}

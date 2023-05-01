@@ -1,5 +1,5 @@
 import { tobrs, getPaymentLink } from './utils';
-import { regSummary, regDetails, paymentReceipt } from './info';
+import { regSummary, regDetails, paymentReceipt, legalInfo } from './info';
 import { findConfirmationById, getEmail, getReg } from './data';
 
 function doGet(e) {
@@ -27,6 +27,7 @@ function doGetRegistration(e) {
     receipt: paymentReceipt(reg),
     reg_details: tobrs(regDetails(reg)),
     payment_link: getPaymentLink(reg),
+    legal_info: tobrs(legalInfo()),
   }));
 }
 
