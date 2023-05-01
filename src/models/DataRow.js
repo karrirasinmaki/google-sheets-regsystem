@@ -1,15 +1,21 @@
 export default class DataRow {
   static _append(sheet, data) {
+    return DataRow._transaction(() => {
+      sheet.appendRow(data)
+      return sheet.getLastRow()
+    })
+  }
+
+  static _transaction(fn) {
     const lock = LockService.getScriptLock()
     try {
       lock.waitLock(10000)
     } catch (e) {
       Logger.log('Could not obtain lock after 10 seconds.')
     }
-    sheet.appendRow(data)
-    const rownum = sheet.getLastRow()
+    const ret = fn()
     lock.releaseLock()
-    return rownum
+    return ret
   }
 
   constructor(sheet, row) {
@@ -32,7 +38,9 @@ export default class DataRow {
     return this._headers.indexOf(key)
   }
 
-  _store(data) {
+  _store() {
+    // TODO
+    this._getDataRange().setValues([this._data])
   }
 
   // store = (data) => {

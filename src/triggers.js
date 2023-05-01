@@ -4,9 +4,47 @@ import Payment from './models/Payment';
 import { sendEmail } from './modules/PostOffice';
 import { sentlog } from './modules/Log'
 
-import { getReceiptEmail, findRegById, getReceivedEmail, getConfirmationEmail, getReg, findSentLogByTokenAndType, createConfirmation } from './data';
+import { getReceiptEmail, findRegById, getReceivedEmail, getConfirmationEmail, getReg, findSentLogByTokenAndType, findConfirmationById, createConfirmation } from './data';
 import { timedTriggerRows } from './utils';
 import { paymentReceipt } from './info';
+
+function triggerOnEdit(e) {
+  if (!e || !e.range) {
+    return;
+  }
+}
+global.triggerOnEdit = triggerOnEdit
+
+function triggerRegAction(e) {
+  if (!e || !e.range) {
+    return;
+  }
+  const { range } = e;
+  if (range.getSheet().getName() !== SHEET_REGS) {
+    return;
+  }
+
+  const row = range.getRow();
+  const sheet = range.getSheet();
+  for (let i = 0, l = range.getNumRows(); i < l; ++i) {
+    const reg = new Reg(sheet, row + i)
+    if (reg && reg.action === 'confirm') {
+      const confirmation = findConfirmationById(reg.token)
+      if (confirmation) {
+        let msg = 'Already confirmed before.'
+        if (!findSentLogByTokenAndType(reg.token, 'Confirmed')) {
+          triggerSendConfirmationEmail(confirmation)
+        }
+        confirmation.status = 'Confirmed'
+        confirmation.message = msg
+        confirmation.timestamp = new Date()
+        confirmation.store()
+        reg.storeCol('action', '')
+      }
+    }
+  }
+}
+global.triggerRegAction = triggerRegAction
 
 function triggerChangeConfirmationStatus(e) {
   if (!e || !e.range) {
@@ -48,34 +86,31 @@ function triggerChangeConfirmationStatus(e) {
 global.triggerChangeConfirmationStatus = triggerChangeConfirmationStatus
 
 function triggerNewRegistration(e) {
-  /*
-  console.log(e)
-  console.log(JSON.stringify(e))
-  if (!e || !e.range) {
+  if (!e || !e.source) {
     return;
   }
-  const { range } = e;
+  if (e.source.getSheetName() !== SHEET_REGS) {
+    return;
+  }
 
-  if (range.getSheet().getName() !== SHEET_REGS) {
-    return;
-  }
-  */
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_REGS);
-  const range = sheet.getRange("A2:AP");
+  const range = sheet.getRange("A2:A");
 
   const row = range.getRow();
+  const values = range.getValues();
   // const sheet = range.getSheet();
   const sendlist = [];
   for (let i = 0, l = range.getNumRows(); i < l; ++i) {
+    if (!values[i][0]) {
+      continue;
+    }
     const reg = new Reg(sheet, row + i)
-    console.log(JSON.stringify(reg))
     if (!!reg.token && reg.status == "null") {
       createConfirmation(reg, 'Pending')
     }
-    // if (!!findSentLogByTokenAndType(reg.token, 'Received')) {
-    //   continue;
-    // }
-    // triggerSendReceivedEmail(reg)
+    if (!findSentLogByTokenAndType(reg.token, 'Received')) {
+      triggerSendReceivedEmail(reg)
+    }
   }
 }
 global.triggerNewRegistration = triggerNewRegistration
@@ -94,10 +129,9 @@ function triggerNewPayment(e) {
   const sendlist = [];
   for (let i = 0, l = range.getNumRows(); i < l; ++i) {
     const payment = new Payment(sheet, row + i)
-    if (findSentLogByTokenAndType(payment.reg_id, 'Receipt')) {
-      continue;
+    if (!findSentLogByTokenAndType(payment.reg_id, 'Receipt')) {
+      triggerSendReceiptEmail(payment)
     }
-    triggerSendReceiptEmail(payment)
   }
 }
 global.triggerNewPayment = triggerNewPayment

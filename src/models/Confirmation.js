@@ -22,4 +22,14 @@ export default class Confirmation extends DataRow {
     this.message = data[2]
     this.timestamp = data[3]
   }
+
+  store() {
+    // TODO
+    DataRow._transaction(() => {
+      this._getDataRange().setValues([[this.token, this.status, this.message, this.timestamp]])
+      this._reload()
+    })
+    // this._data = [this.token, this.status, this.message, this.timestamp]
+    // super._store()
+  }
 }
