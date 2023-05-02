@@ -31,7 +31,7 @@ export default class Reg extends DataRow {
     this.extrapass = this.get('Extra track?')
     this.extrapass_role = this.get('Extra track - Role')
     this.extrapass_partner = this.get('Extra track - Partner name and email')
-    this.has_extrapass = (`${this.extrapass}`).toLowerCase() !== 'no thanks'
+    this.has_extrapass = (this.extrapass && (`${this.extrapass}`).toLowerCase() !== 'no thanks')
 
     this.tshirt = this.get('I want to get a T-shirt')
     this.thsirt_type = this.get('T-shirt type')

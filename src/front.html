@@ -7,7 +7,7 @@
 <div class="section section-centered">
     <h1 class="layered">
 	<div class="sub">Your Registration</div>
-	<div>Helswingi 2019</div>
+	<div>Helswingi 2023</div>
     </h1>
     <div><?= data.reg.firstName ?> <?= data.reg.lastName ?></div>
     <div><?= data.reg.email ?></div>
@@ -16,9 +16,9 @@
 
 <div class="section section-centered">
     <? if (data.reg.status == 'Confirmed') { ?>
-	<div>Group: <?= data.reg.group ?></div>
+	<div>Ticket: <?= (""+data.reg.pass).split("|")[0] ?><br/>(<?= data.reg.pass_track ?>)</div>
 	<? if (data.reg.has_extrapass) { ?>
-	    <div>Extra: <?= data.reg.extrapass ?></div>
+	    <div>+ Extra: <?= (""+data.reg.extrapass).split("|")[0] ?></div>
 	<? } ?>
     <? } ?>
 </div>
@@ -45,7 +45,7 @@
 	<? if (data.reg.paid) { ?>
 	    <a href="#receipt">Receipt</a> |
 	<? } else { ?>
-	    <a href="<?= data.payment_link ?>" target="_blank">Pay now (€<?= data.reg.score ?>)</a> |
+	    <a href="#pay">Pay now (€<?= data.reg.score ?>)</a> |
 	<? } ?>
     <? } ?>
     <a href="#contact">Contact</a> |
@@ -63,6 +63,19 @@
     </div>
     <div class="section">
 	<?!= data.reg_details ?>
+    </div>
+</div>
+
+<div id="pay" class="collapsed">
+    <h3>Pay now</h3>
+    <a href="#">Close</a>
+    <div class="section">
+	<p>You can pay your registration fee via SEPA bank transfer. Please follow the details exactly.</p>
+	<pre><?= data.payment ?></pre>
+	<p>
+	    If you wish to pay with Edenred, Smartum, or ePassi, follow the instructions on our FAQ page:<br>
+	    <a href="<?= data.globals.EVENT_WWW_FAQ ?>" target="_blank"><?= data.globals.EVENT_WWW_FAQ ?></a>
+	</p>
     </div>
 </div>
 
@@ -88,11 +101,11 @@
 	<br>
 	<p>
 	    <b>Privacy policy</b><br>
-	    <a href="https://www.helswingi.fi/privacy-policy">www.helswingi.fi/privacy-policy</a>
+	    <a href="https://www.helswingi.fi/privacy-policy" target="_blank">www.helswingi.fi/privacy-policy</a>
 	</p>
 	<p>
 	    <b>Terms and conditions</b><br>
-	    <a href="https://www.helswingi.fi/terms-and-conditions">www.helswingi.fi/terms-and-conditions</a>
+	    <a href="https://www.helswingi.fi/terms-and-conditions" target="_blank">www.helswingi.fi/terms-and-conditions</a>
 	</p>
 	</p>
 	    <b>Legal information</b><br>

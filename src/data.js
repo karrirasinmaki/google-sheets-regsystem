@@ -4,7 +4,7 @@ import Reg from './models/Reg';
 import Confirmation from './models/Confirmation';
 
 import { tobrs, parseTemplateTags, getPaymentLink } from './utils';
-import { regSummary } from './info';
+import { regSummary, paymentDetails } from './info';
 
 export function findSentLogByTokenAndType(token, type) {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_SENT);
@@ -125,33 +125,26 @@ export function getConfirmationEmail(reg) {
     content: `
 Hello, ${reg.firstName} ${reg.lastName}!
 
-We are happy to inform you, that your registration for ${EVENT_NAME} is confirmed. Please make your payment within 14 days from today.
+We are happy to inform you, that your registration for ${EVENT_NAME} is confirmed.
 
-Order summary:
-${regSummary(reg)}
-
-Payment link:
-${getPaymentLink(reg)}
-
-Your registration details:
-https://www.helswingi.fi/registration/details?regid=${reg.token}
-
-We regularly update our website, Facebook event page and Instagram with the latest news about the festival. If you have any questions, please contact us via e-mail at ${EVENT_EMAIL}.
+Please make your payment within 14 days from today. Follow the payment details at the end of this email.
 
 Welcome to Helswingi!
 
+${EVENT_EMAIL}
 ${EVENT_WWW}
 ${EVENT_FACEBOOK}
 ${EVENT_INSTAGRAM}
 
-Ps. You can also make your payment using a wire transfer. Transfer details:
 
-Amount: ${reg.score}€
-Beneficiary name: ${ORG_NAME_LEGAL}
-Address: ${ORG_ADDRESS}
-IBAN: ${ORG_IBAN}
-BIC: ${ORG_BIC}
-Message: ${EVENT_NAME} - ${reg.token}
+INVOICE / PAYMENT DETAILS
+<hr />
+${paymentDetails(reg)}
+
+You can also pay using Smartum / Edenred / ePassi vouchers. Refer to our <a href="${EVENT_WWW_FAQ}">FAQ page</a> for details.
+
+Full registration details:
+https://www.helswingi.fi/registration/details?regid=${reg.token}
   `,
   });
 }
@@ -162,17 +155,22 @@ export function getReceivedEmail(reg) {
     content: `
 Hello, ${reg.firstName} ${reg.lastName}!
 
-We have received your registration.
+Thank you very much for registering for Helswingi 2023.
 
-Here's a summary of your registration:
+We have received your registration and will start processing it shortly. We will get back to you within the next 10 days with your registration status (and payment details).
 
+Here is a summary of your registration:
 ${regSummary(reg)}
 
-Your registration details:
+Full registration details:
 https://www.helswingi.fi/registration/details?regid=${reg.token}
 
-We regularly update our website, Facebook event page and Instagram with the latest news about the festival. If you have any questions, please contact us via e-mail at ${EVENT_EMAIL}.
+If you have any questions, please visit our <a href="${EVENT_WWW_FAQ}">frequently asked questions page</a> or contact us by replying to this email. Visit our <a href="${EVENT_WWW}">website</a>, <a href="${EVENT_FB_EVENT}">Facebook event</a> or <a href="${EVENT_INSTAGRAM}">Instagram</a> for continuous event information updates.
 
+Thank you,
+Your Helswingi team
+
+${EVENT_EMAIL}
 ${EVENT_WWW}
 ${EVENT_FACEBOOK}
 ${EVENT_INSTAGRAM}
