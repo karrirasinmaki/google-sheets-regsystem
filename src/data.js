@@ -200,14 +200,24 @@ export function getWaitingListEmail(reg) {
       return '';
     }
   }
+  function passip(text) {
+    if (!!text && text.length > 0) {
+      return text.split('|')[0];
+    }
+    else {
+      return '';
+    }
+  }
   return getEmail({
-    subject: `${EVENT_NAME} - Registration pending (waiting list)`,
+    subject: `${EVENT_NAME} - Registration status update (waiting list)`,
     content: `
 Hello, ${reg.firstName} ${reg.lastName}!
 
 We're sending you this email to let you know that you're currently on the waiting list for:
-${reg.pass_track} ${atmos(reg.pass_role)}${!reg.has_extrapass ? '' : `, and 
-${reg.extrapass} ${atmos(eg.extrapass_role)}`}
+
+${passip(reg.pass)}
+${reg.pass_track} ${atmos(reg.pass_role)}${!reg.has_extrapass ? '' : `
+${passip(reg.extrapass)} ${atmos(reg.extrapass_role)}`}
 
 We want to keep a good balance in the class groups and wait for more other role participants to register for your group(s). We will let you know as soon as a spot becomes available or if we have a proposal specifically for your case.
 
