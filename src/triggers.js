@@ -4,7 +4,11 @@ import Payment from './models/Payment';
 import { sendEmail } from './modules/PostOffice';
 import { sentlog } from './modules/Log'
 
-import { getReceiptEmail, findRegById, getReceivedEmail, getConfirmationEmail, getReg, findSentLogByTokenAndType, findConfirmationById, createConfirmation } from './data';
+import {
+  getReg, createConfirmation,
+  getReceiptEmail, getReceivedEmail, getConfirmationEmail, getWaitingListEmail,
+  findRegById, findSentLogByTokenAndType, findConfirmationById
+} from './data';
 import { timedTriggerRows } from './utils';
 import { paymentReceipt } from './info';
 
@@ -50,6 +54,8 @@ function triggerRegAction(e) {
   const sheet = range.getSheet();
   for (let i = 0, l = range.getNumRows(); i < l; ++i) {
     const reg = new Reg(sheet, row + i)
+
+    // CONFIRM
     if (reg && reg.action === 'confirm') {
       const confirmation = findConfirmationById(reg.token)
       if (confirmation) {
@@ -66,6 +72,25 @@ function triggerRegAction(e) {
         reg.storeCol('action', '')
       }
     }
+
+    // WAITING LIST
+    if (reg && reg.action === 'waiting-list') {
+      const confirmation = findConfirmationById(reg.token)
+      if (confirmation) {
+        confirmation.status = 'Waiting list'
+        confirmation.message = ''
+        confirmation.timestamp = new Date()
+        if (!findSentLogByTokenAndType(reg.token, 'Waiting list')) {
+          confirmation.message = triggerSendWaitingListEmail(confirmation)
+        }
+        else {
+          confirmation.message = 'Already in waiting list.'
+        }
+        confirmation.store()
+        reg.storeCol('action', '')
+      }
+    }
+
   }
 }
 
@@ -124,8 +149,8 @@ function triggerCheckNewRegistrations() {
 
     const reg = new Reg(sheet, row + i)
     if (!!reg.token && reg.status == "null") {
-      createConfirmation(reg, 'Pending')
       if (!findSentLogByTokenAndType(reg.token, 'Received')) {
+        createConfirmation(reg, 'Pending')
         triggerSendReceivedEmail(reg)
       }
     }
@@ -149,6 +174,24 @@ function triggerNewPayment(e) {
     if (!findSentLogByTokenAndType(payment.reg_id, 'Receipt')) {
       triggerSendReceiptEmail(payment)
     }
+  }
+}
+
+function triggerSendWaitingListEmail(confirmation) {
+  // if (!isNaN(confirmation.confirmationdate)) {
+  //   // Todo: Check if email already sent
+  //   throw "Sending cancelled: email already sent.";
+  // }
+  try {
+    const reg = getReg(confirmation.token)
+    const email = getWaitingListEmail(reg)
+    sendEmail(reg.email, email)
+    sentlog(confirmation.status, confirmation.token)
+    confirmation.storeCol('Timestamp', new Date())
+    return `Sent: ${new Date().toJSON()}`
+  } catch (exp) {
+    sentlog('error', confirmation.token, JSON.stringify(exp))
+    throw exp
   }
 }
 

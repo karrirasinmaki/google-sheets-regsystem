@@ -1,4 +1,4 @@
-import { findPaymentByRegId, findRegById } from './data';
+import { findPaymentByRegId, findPaymentsByRegId, findRegById } from './data';
 
 export function regDetails(reg) {
   let out = [];
@@ -45,6 +45,20 @@ export function regSummary(reg) {
   return summ.join('\n')
 }
 
+export function paymentDetailsSEPA(reg) {
+  if (!reg) reg = findRegById(payment.reg_id)
+  return `
+SEPA bank transfer details
+
+Amount: ${reg.score}€
+Beneficiary name: ${ORG_NAME_LEGAL}
+Address: ${ORG_ADDRESS}
+IBAN: ${ORG_IBAN}
+BIC: ${ORG_BIC}
+Message: ${EVENT_NAME} - ${reg.email.replace('@', '-at-')}`
+}
+
+
 export function paymentDetails(reg) {
   if (!reg) reg = findRegById(payment.reg_id)
   return `
@@ -54,16 +68,7 @@ ____________
 | ${EVENT_NAME}
 | ${reg.firstName} ${reg.lastName}
 ________
-
-SEPA bank transfer details
-
-Amount: ${reg.score}€
-Beneficiary name: ${ORG_NAME_LEGAL}
-Address: ${ORG_ADDRESS}
-IBAN: ${ORG_IBAN}
-BIC: ${ORG_BIC}
-Message: ${EVENT_NAME} - ${reg.email}
-
+ ${paymentDetailsSEPA(reg)}
 ________
 
 Order summary
@@ -89,17 +94,25 @@ ${ORG_NAME_LEGAL} (${ORG_VATNUM})
 }
 
 export function paymentReceipt(reg, payment) {
-  if (!payment) payment = findPaymentByRegId(reg.token)
   if (!reg) reg = findRegById(payment.reg_id)
-  return `
-This is a receipt for your payment.
 
+  let payments = []
+  if (!payment) {
+    payments = findPaymentsByRegId(reg.token)
+  }
+  else {
+    payments = [payment]
+  }
+
+  return `
 ____________
 |
-${!payment ? '' :
-`${payment.message}
+| PAYMENT RECEIPT
+|
+${payments.map(payment => (`
+${payment.paid}€ ${payment.message}
+Payment date: ${new Date(payment.date).toJSON()}`))}
 
-Payment date: ${new Date(payment.date).toJSON()}`}
 Order id: ${reg.token}
 Order details:
 - ${reg.pass}
@@ -113,12 +126,9 @@ ${!reg.has_tshirt ? '' :
   ----------
   Total: ${reg.score}€
 
-
 ________
 
-Merchant:
-${ORG_NAME_LEGAL}
-${ORG_VATNUM} (VAT number)
+${ORG_NAME_LEGAL} (${ORG_VATNUM})
 ${ORG_ADDRESS}
 ${ORG_EMAIL}
 |____________

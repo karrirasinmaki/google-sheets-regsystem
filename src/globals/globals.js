@@ -4,7 +4,7 @@ var SHEET_SENT = "SentLog";
 var SHEET_REGS = "Regs";
 var SHEET_PAYMENTS = "AllPaid";
 
-var EMAIL_IMAGE_URL = "https://firebasestorage.googleapis.com/v0/b/blackpepperswing.appspot.com/o/Helswingi%2Bfinal%2Bcover_2019-short.jpg?alt=media&token=2cf7cf2e-11fc-4bcc-93c2-be9b4888bb1c";
+var EMAIL_IMAGE_URL = "https://firebasestorage.googleapis.com/v0/b/blackpepperswing.appspot.com/o/email-covers%2FHelswingi%20cover%202023_1_short_w1200px.jpg?alt=media&token=d8891a0e-be25-4429-a190-716822db44b5";
 
 var EVENT_NAME = "Helswingi 2023";
 var EVENT_EMAIL = "info@helswingi.fi";
@@ -22,6 +22,6 @@ var ORG_NAME_LEGAL = "Osuuskunta Swing Kollektiivi";
 var ORG_ADDRESS = "Karjalankatu 2 (c/o Black Pepper Swing), 00520 Helsinki, Finland";
 var ORG_IBAN = "FI82 7997 7996 5259 81";
 var ORG_BIC = "HOLVFIHH";
-var ORG_TEL = "";
+var ORG_TEL = "+358 84 154 1724";
 var ORG_VATNUM = "FI28578381";
 var ORG_EMAIL = "info@blackpepperswing.com";
