@@ -43,5 +43,7 @@ export default class Reg extends DataRow {
     this.has_volunteer = this.get('I would like to volunteer')
 
     this.score = this.get('score')
+    this.score_settled = this.get('score_settled')
+    this.score_open = this.get('score_open')
   }
 }

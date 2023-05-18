@@ -23,7 +23,6 @@ function triggerOnEdit(e) {
 
   triggerRegAction(e)
   triggerChangeConfirmationStatus(e)
-  // triggerNewPayment(e)
 }
 global.triggerOnEdit = triggerOnEdit
 
@@ -157,25 +156,31 @@ function triggerCheckNewRegistrations() {
   }
 }
 
-function triggerNewPayment(e) {
-  if (!e || !e.range) {
-    return;
-  }
-  const { range } = e;
-  if (range.getSheet().getName() !== SHEET_PAYMENTS) {
-    return;
-  }
+/**
+ * Check new payments
+ */
+function triggerCheckNewPayments() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_REGS);
+  const range = sheet.getRange("A2:D");
 
   const row = range.getRow();
-  const sheet = range.getSheet();
+  const values = range.getValues();
+  // const sheet = range.getSheet();
   const sendlist = [];
   for (let i = 0, l = range.getNumRows(); i < l; ++i) {
-    const payment = new Payment(sheet, row + i)
-    if (!findSentLogByTokenAndType(payment.reg_id, 'Receipt')) {
-      triggerSendReceiptEmail(payment)
+    if (!values[i][0]) continue;
+    if (''+values[i][2] !== 'null') continue;
+    if (!values[i][3]) continue;
+
+    const reg = new Reg(sheet, row + i)
+    if (!!reg.token && reg.score_open <= 0) {
+      if (!findSentLogByTokenAndType(reg.token, 'Receipt')) {
+        triggerSendReceiptEmail(payment)
+      }
     }
   }
 }
+// global.triggerCheckNewPayments = triggerCheckNewPayments;
 
 function triggerSendWaitingListEmail(confirmation) {
   // if (!isNaN(confirmation.confirmationdate)) {
@@ -230,18 +235,18 @@ function triggerSendReceivedEmail(reg) {
   }
 }
 
-function triggerSendReceiptEmail(payment) {
+function triggerSendReceiptEmail(reg) {
   // if (!isNaN(confirmation.confirmationdate)) {
   //   // Todo: Check if email already sent
   //   throw "Sending cancelled: email already sent.";
   // }
   try {
-    const reg = findRegById(payment.reg_id)
-    sendEmail(reg.email, getReceiptEmail(reg, paymentReceipt(reg, payment)))
-    sentlog('Receipt', payment.reg_id)
+    // const reg = findRegById(payment.reg_id)
+    sendEmail(reg.email, getReceiptEmail(reg, paymentReceipt(reg)))
+    sentlog('Receipt', reg.token)
     return `Sent: ${new Date().toJSON()}`
   } catch (exp) {
-    sentlog('error', payment.reg_id, JSON.stringify(exp))
+    sentlog('error', reg.token, JSON.stringify(exp))
     throw exp
   }
 }
