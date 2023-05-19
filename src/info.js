@@ -47,10 +47,7 @@ export function regSummary(reg) {
 
 export function paymentDetailsSEPA(reg) {
   if (!reg) reg = findRegById(payment.reg_id)
-  return `
-SEPA bank transfer details
-
-Amount: ${reg.score}€
+  return `Amount: ${reg.score}€
 Beneficiary name: ${ORG_NAME_LEGAL}
 Address: ${ORG_ADDRESS}
 IBAN: ${ORG_IBAN}
@@ -68,7 +65,8 @@ ____________
 | ${EVENT_NAME}
 | ${reg.firstName} ${reg.lastName}
 ________
- ${paymentDetailsSEPA(reg)}
+SEPA bank transfer details:
+${paymentDetailsSEPA(reg)}
 ________
 
 Order summary

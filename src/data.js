@@ -143,6 +143,7 @@ We are happy to inform you, that your registration for ${EVENT_NAME} is confirme
 Order summary:
 ${regSummary(reg)}
 
+SEPA bank transfer details:
 ${paymentDetailsSEPA(reg)}
 
 You can also pay using Smartum / Edenred / ePassi vouchers. Refer to our <a href="${EVENT_WWW_FAQ}">FAQ page</a> for details.
