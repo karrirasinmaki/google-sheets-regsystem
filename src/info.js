@@ -45,6 +45,17 @@ export function regSummary(reg) {
   return summ.join('\n')
 }
 
+export function sepaTransferDetails(reg) {
+  if (!reg) reg = findRegById(payment.reg_id)
+  return `
+Amount: ${reg.score}€
+Beneficiary name: ${ORG_NAME_LEGAL}
+Address: ${ORG_ADDRESS}
+IBAN: ${ORG_IBAN}
+BIC: ${ORG_BIC}
+Message: ${EVENT_NAME} - ${reg.email}`
+}
+
 export function paymentDetails(reg) {
   if (!reg) reg = findRegById(payment.reg_id)
   return `

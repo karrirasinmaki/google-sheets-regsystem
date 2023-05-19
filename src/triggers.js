@@ -1,3 +1,4 @@
+import DataRow from './models/DataRow';
 import Reg from './models/Reg';
 import Confirmation from './models/Confirmation';
 import Payment from './models/Payment';
@@ -111,25 +112,29 @@ function triggerChangeConfirmationStatus(e) {
  * Check new registrations
  */
 function triggerCheckNewRegistrations() {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_REGS);
-  const range = sheet.getRange("A2:C");
+  DataRow._transaction(() => {
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_REGS);
+    const range = sheet.getRange("A2:C");
 
-  const row = range.getRow();
-  const values = range.getValues();
-  // const sheet = range.getSheet();
-  const sendlist = [];
-  for (let i = 0, l = range.getNumRows(); i < l; ++i) {
-    if (!values[i][0]) continue;
-    if (''+values[i][2] !== 'null') continue;
+    const row = range.getRow();
+    const values = range.getValues();
+    // const sheet = range.getSheet();
+    const sendlist = [];
+    for (let i = 0, l = range.getNumRows(); i < l; ++i) {
+      if (!values[i][0]) continue;
+      if (''+values[i][2] !== 'null') continue;
 
-    const reg = new Reg(sheet, row + i)
-    if (!!reg.token && reg.status == "null") {
-      createConfirmation(reg, 'Pending')
-      if (!findSentLogByTokenAndType(reg.token, 'Received')) {
-        triggerSendReceivedEmail(reg)
+      const reg = new Reg(sheet, row + i)
+      if (!!reg.token && reg.status == "null") {
+        let confirmation = createConfirmation(reg, 'Pending')
+        confirmation.timestamp = new Date()
+        if (!findSentLogByTokenAndType(reg.token, 'Received')) {
+          confirmation.message = triggerSendReceivedEmail(reg)
+        }
+        confirmation.store()
       }
     }
-  }
+  })
 }
 
 function triggerNewPayment(e) {
@@ -176,6 +181,9 @@ function triggerSendReceivedEmail(reg) {
   //   throw "Sending cancelled: email already sent.";
   // }
   try {
+    if (!reg.email) {
+      throw "Email address is missing: "+JSON.stringify(reg);
+    }
     // const reg = getReg(confirmation.token)
     const email = getReceivedEmail(reg)
     sendEmail(reg.email, email)

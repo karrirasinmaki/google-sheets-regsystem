@@ -4,7 +4,7 @@ import Reg from './models/Reg';
 import Confirmation from './models/Confirmation';
 
 import { tobrs, parseTemplateTags, getPaymentLink } from './utils';
-import { regSummary, paymentDetails } from './info';
+import { regSummary, paymentDetails, sepaTransferDetails } from './info';
 
 export function findSentLogByTokenAndType(token, type) {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_SENT);
@@ -125,9 +125,20 @@ export function getConfirmationEmail(reg) {
     content: `
 Hello, ${reg.firstName} ${reg.lastName}!
 
-We are happy to inform you, that your registration for ${EVENT_NAME} is confirmed.
+We are happy to inform you, that your registration for ${EVENT_NAME} is confirmed. Please make your payment within 14 days from today.
 
-Please make your payment within 14 days from today. Follow the payment details at the end of this email.
+Order summary:
+${regSummary(reg)}
+
+SEPA bank transfer details:
+${sepaTransferDetails(reg)}
+
+You can also pay using Smartum / Edenred / ePassi vouchers. Refer to our <a href="${EVENT_WWW_FAQ}">FAQ page</a> for details.
+
+For the full invoice and registration details, follow this link:
+https://www.helswingi.fi/registration/details?regid=${reg.token}
+
+If you have any questions, please visit our <a href="${EVENT_WWW_FAQ}">frequently asked questions page</a> or contact us by replying to this email. Visit our <a href="${EVENT_WWW}">website</a>, <a href="${EVENT_FB_EVENT}">Facebook event</a> or <a href="${EVENT_INSTAGRAM}">Instagram</a> for continuous event information updates.
 
 Welcome to Helswingi!
 
@@ -135,17 +146,7 @@ ${EVENT_EMAIL}
 ${EVENT_WWW}
 ${EVENT_FACEBOOK}
 ${EVENT_INSTAGRAM}
-
-
-INVOICE / PAYMENT DETAILS
-<hr />
-${paymentDetails(reg)}
-
-You can also pay using Smartum / Edenred / ePassi vouchers. Refer to our <a href="${EVENT_WWW_FAQ}">FAQ page</a> for details.
-
-Full registration details:
-https://www.helswingi.fi/registration/details?regid=${reg.token}
-  `,
+    `,
   });
 }
 
