@@ -138,7 +138,7 @@ export function getConfirmationEmail(reg) {
     content: `
 Hello, ${reg.firstName} ${reg.lastName}!
 
-We are happy to inform you, that your registration for Helswingi 2023 is confirmed. Please make your payment within 14 days from today.
+We are happy to inform you, that your registration for ${EVENT_NAME} is confirmed. Please make your payment within 14 days from today.
 
 Order summary:
 ${regSummary(reg)}

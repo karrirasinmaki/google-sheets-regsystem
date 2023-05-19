@@ -149,8 +149,9 @@ function triggerCheckNewRegistrations() {
     const reg = new Reg(sheet, row + i)
     if (!!reg.token && reg.status == "null") {
       if (!findSentLogByTokenAndType(reg.token, 'Received')) {
-        createConfirmation(reg, 'Pending')
-        triggerSendReceivedEmail(reg)
+        let confirmation = createConfirmation(reg, 'Pending')
+        confirmation.message = triggerSendReceivedEmail(reg)
+        confirmation.store()
       }
     }
   }
