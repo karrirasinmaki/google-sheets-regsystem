@@ -222,7 +222,7 @@ ${passip(reg.extrapass)} ${atmos(reg.extrapass_role)}`}
 
 We want to keep a good balance in the class groups and wait for more other role participants to register for your group(s). We will let you know as soon as a spot becomes available or if we have a proposal specifically for your case.
 
-You can find you registration information here:
+You can find your registration information here:
 https://www.helswingi.fi/registration/details?regid=${reg.token}
 
 If you have any questions, please visit our <a href="${EVENT_WWW_FAQ}">frequently asked questions page</a> or contact us by replying to this email. Visit our <a href="${EVENT_WWW}">website</a>, <a href="${EVENT_FB_EVENT}">Facebook event</a> or <a href="${EVENT_INSTAGRAM}">Instagram</a> for continuous event information updates.
@@ -241,9 +241,9 @@ Hello, ${reg.firstName} ${reg.lastName}!
 
 We have received your full payment for ${EVENT_NAME} Thank you so much, we are looking forward to welcoming you at the festival on September 15 - 17. 
 
-We invite you to follow our website, <a href="${EVENT_FB_EVENT}">Facebook event</a> or <a href="${EVENT_INSTAGRAM}">Instagram</a> for continuous event information updates. If you have any questions, please visit our <a href="${EVENT_WWW_FAQ}">frequently asked questions page</a> or contact us by replying to this email.
+We invite you to follow our <a href="${EVENT_WWW}">website</a>, <a href="${EVENT_FB_EVENT}">Facebook event</a> or <a href="${EVENT_INSTAGRAM}">Instagram</a> for continuous event information updates. If you have any questions, please visit our <a href="${EVENT_WWW_FAQ}">frequently asked questions page</a> or contact us by replying to this email.
 
-You can find you registration information here:
+You can find your payment receipt and full registration details here:
 https://www.helswingi.fi/registration/details?regid=${reg.token}
 
 Sincerely,

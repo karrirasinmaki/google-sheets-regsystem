@@ -65,7 +65,9 @@ ____________
 | ${EVENT_NAME}
 | ${reg.firstName} ${reg.lastName}
 ________
-SEPA bank transfer details:
+
+SEPA bank transfer details
+
 ${paymentDetailsSEPA(reg)}
 ________
 

@@ -45,5 +45,9 @@ export default class Reg extends DataRow {
     this.score = this.get('score')
     this.score_settled = this.get('score_settled')
     this.score_open = this.get('score_open')
+
+    this.confirmation_sent = this.get('Confirmation date')
+    this.receipt_sent = this.get('Receipt date')
+    this.is_receipt_sent = new Date(this.receipt_sent) > 0
   }
 }

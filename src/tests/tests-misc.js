@@ -6,3 +6,7 @@ function test_triggerNewRegistration() {
   var range = sheet.getRange('A4:D4');
   triggerNewRegistration({range: range});
 }
+
+function test_triggerCheckPayments() {
+  triggerCheckPayments()
+}

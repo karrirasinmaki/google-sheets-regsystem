@@ -37,6 +37,12 @@ function triggerOnChange(e) {
 }
 global.triggerOnChange = triggerOnChange
 
+function triggerCheckPayments(e) {
+  console.log("Trigger: triggerCheckPayments")
+  triggerCheckNewPayments()
+}
+global.triggerCheckPayments = triggerCheckPayments
+
 
 /** CALLABLE TRIGGERS **/
 
@@ -170,18 +176,20 @@ function triggerCheckNewPayments() {
   const sendlist = [];
   for (let i = 0, l = range.getNumRows(); i < l; ++i) {
     if (!values[i][0]) continue;
-    if (''+values[i][2] !== 'null') continue;
+    if (''+values[i][2] !== 'Confirmed') continue;
     if (!values[i][3]) continue;
 
+    console.log(values[i])
+
     const reg = new Reg(sheet, row + i)
-    if (!!reg.token && reg.score_open <= 0) {
+    console.log("Checking payment for: ", reg.email, ", receipt sent: ", reg.receipt_sent)
+    if (!!reg.token && reg.score > 0 && reg.score_open <= 0 && !reg.is_receipt_sent) {
       if (!findSentLogByTokenAndType(reg.token, 'Receipt')) {
-        triggerSendReceiptEmail(payment)
+        triggerSendReceiptEmail(reg)
       }
     }
   }
 }
-// global.triggerCheckNewPayments = triggerCheckNewPayments;
 
 function triggerSendWaitingListEmail(confirmation) {
   // if (!isNaN(confirmation.confirmationdate)) {
