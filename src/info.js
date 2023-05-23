@@ -111,7 +111,7 @@ ____________
 |
 ${payments.map(payment => (`
 ${payment.paid}€ ${payment.message}
-Payment date: ${new Date(payment.date).toJSON()}`))}
+Payment date: ${payment.date}`))}
 
 Order id: ${reg.token}
 Order details:
