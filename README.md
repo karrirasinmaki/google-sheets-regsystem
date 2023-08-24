@@ -29,6 +29,11 @@ npm run webpack
 clasp push
 ```
 
+You may need to do this before:
+```
+export NODE_OPTIONS=--openssl-legacy-provider
+```
+
 
 ## Triggers
 

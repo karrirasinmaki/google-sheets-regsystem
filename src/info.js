@@ -47,8 +47,8 @@ export function regSummary(reg) {
 
 export function paymentDetailsSEPA(reg) {
   if (!reg) reg = findRegById(payment.reg_id)
-  return `${reg.score_settled > 0 && `Paid earlier: ${reg.score_settled}€`}
-${reg.score_settled && 'Open '}Amount: ${reg.score_open}€
+  return `${reg.score_settled > 0 ? `Paid earlier: ${reg.score_settled}€` : ''}
+${reg.score_settled ? 'Remaining ' : ''}Amount: ${reg.score_open}€
 Beneficiary name: ${ORG_NAME_LEGAL}
 Address: ${ORG_ADDRESS}
 IBAN: ${ORG_IBAN}

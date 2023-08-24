@@ -6,7 +6,8 @@ import { sentlog } from './modules/Log'
 
 import {
   getReg, createConfirmation,
-  getReceiptEmail, getReceivedEmail, getConfirmationEmail, getWaitingListEmail,
+  getReceivedEmail, getConfirmationEmail, getWaitingListEmail,
+  getReceiptEmail, getPaymentReminderEmail,
   findRegById, findSentLogByTokenAndType, findConfirmationById
 } from './data';
 import { timedTriggerRows } from './utils';
