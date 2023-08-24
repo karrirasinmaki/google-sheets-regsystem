@@ -96,6 +96,17 @@ function triggerRegAction(e) {
       }
     }
 
+    // PAYMENT REMINDER
+    if (reg && reg.action === 'payment-reminder') {
+      const confirmation = findConfirmationById(reg.token)
+      if (confirmation) {
+        if (!findSentLogByTokenAndType(reg.token, 'Payment reminder')) {
+          triggerSendPaymentReminderEmail(reg)
+        }
+        reg.storeCol('action', '')
+      }
+    }
+
   }
 }
 
@@ -253,6 +264,21 @@ function triggerSendReceiptEmail(reg) {
     // const reg = findRegById(payment.reg_id)
     sendEmail(reg.email, getReceiptEmail(reg, paymentReceipt(reg)))
     sentlog('Receipt', reg.token)
+    return `Sent: ${new Date().toJSON()}`
+  } catch (exp) {
+    sentlog('error', reg.token, JSON.stringify(exp))
+    throw exp
+  }
+}
+
+function triggerSendPaymentReminderEmail(reg) {
+  // if (!isNaN(confirmation.confirmationdate)) {
+  //   // Todo: Check if email already sent
+  //   throw "Sending cancelled: email already sent.";
+  // }
+  try {
+    sendEmail(reg.email, getPaymentReminderEmail(reg))
+    sentlog('Payment reminder', reg.token)
     return `Sent: ${new Date().toJSON()}`
   } catch (exp) {
     sentlog('error', reg.token, JSON.stringify(exp))

@@ -8,6 +8,7 @@ var EMAIL_IMAGE_URL = "https://firebasestorage.googleapis.com/v0/b/blackpeppersw
 
 var EVENT_NAME = "Helswingi 2023";
 var EVENT_EMAIL = "info@helswingi.fi";
+var EVENT_TEL = "+358 84 154 1724";
 var EVENT_WWW = "https://www.helswingi.fi/";
 var EVENT_WWW_FAQ = "https://www.helswingi.fi/faq";
 var EVENT_FACEBOOK = "https://www.facebook.com/helswingi/";

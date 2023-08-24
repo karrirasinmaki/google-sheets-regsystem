@@ -255,3 +255,35 @@ ${receipt}
   `,
   });
 }
+
+export function getPaymentReminderEmail(reg) {
+  return getEmail({
+    subject: `${EVENT_NAME} - Payment reminder (deadline in 10 days)`,
+    content: `
+Hello, ${reg.firstName} ${reg.lastName}!
+
+We are waiting for your payment for ${EVENT_NAME}.
+
+We kindly ask you to pay any remaining amount within the next 10 days. This avoids any late payment fees. Please note unsettled payment is not a cancellation and won’t change your registration status.
+
+Order summary:
+${regSummary(reg)}
+
+SEPA bank transfer details:
+${paymentDetailsSEPA(reg)}
+
+If you cannot make a SEPA transfer, contact us for alternative payment methods.
+
+You can also pay using Smartum / Edenred / ePassi vouchers. Refer to our <a href="${EVENT_WWW_FAQ}">FAQ page</a> for details.
+
+For the full invoice and registration details, follow this link:
+https://www.helswingi.fi/registration/details?regid=${reg.token}
+
+If you have any questions, please contact us directly via telephone or email.
+
+${EVENT_NAME}
+${EVENT_TEL}
+${EVENT_EMAIL}
+  `,
+  });
+}
